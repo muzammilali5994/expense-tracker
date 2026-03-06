@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 
-import { getFirestore , doc ,collection, setDoc,addDoc, updateDoc , deleteDoc, getDoc} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+import { getFirestore , doc ,collection,onSnapshot, setDoc,addDoc, updateDoc , deleteDoc, getDoc} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 
 // Your web app's Firebase configuration
@@ -26,19 +26,42 @@ const db = getFirestore(app);
 
     const submitBtn = document.getElementById("submitBtn");
 
-    submitBtn.addEventListener("click",async ()=>{
-    const name = document.getElementById("name").value;
-    const amount = document.getElementById("amount").value;
-    const expenseType = document.getElementById("expense-type").value;
-    const date = document.getElementById("date").value;
-        
+     const name = document.getElementById("name");
+    const amount = document.getElementById("amount");
+    const expenseType = document.getElementById("expense-type");
+    const date = document.getElementById("date");
 
-       
+    submitBtn.addEventListener("click",addData)
+   
+        async function addData() {
             await addDoc(collection(db,"expensetracker"),{
-                name:name,
-                amount:amount,
-                expenseType:expenseType,
-                date:date
+                name:name.value,
+                amount:amount.value,
+                expenseType:expenseType.value,
+                date:date.value
             })
-    })
+            name.value="";
+            amount.value="";
+            date.value="";
+    }
+
+    //fetch data in table
+
+    const tableBody = document.getElementById("tableBody");
+
+  
+    onSnapshot(collection(db,"expensetracker"),(sndata)=>{
+      tableBody.innerHTML = "";
+      sndata.forEach((x) => {
+        tableBody.innerHTML += `
+          <tr>
+          <td>${x.data().name}</td>
+          <td>${x.data().amount}</td>
+          <td>${x.data().expenseType}</td>
+          <td>${x.data().date}</td>
+          </tr>
     
+        `
+        console.log(x.data().name)
+      });
+    })
