@@ -1,5 +1,6 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+import { getFirestore , doc ,collection, setDoc,addDoc, updateDoc , deleteDoc, getDoc} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 
 // Your web app's Firebase configuration
@@ -15,4 +16,29 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-const auth = getAuth(app);
+
+
+const db = getFirestore(app);
+
+// Add Data
+
+   
+
+    const submitBtn = document.getElementById("submitBtn");
+
+    submitBtn.addEventListener("click",async ()=>{
+    const name = document.getElementById("name").value;
+    const amount = document.getElementById("amount").value;
+    const expenseType = document.getElementById("expense-type").value;
+    const date = document.getElementById("date").value;
+        
+
+       
+            await addDoc(collection(db,"expensetracker"),{
+                name:name,
+                amount:amount,
+                expenseType:expenseType,
+                date:date
+            })
+    })
+    
