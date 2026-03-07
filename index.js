@@ -59,9 +59,15 @@ const db = getFirestore(app);
           <td>${x.data().amount}</td>
           <td>${x.data().expenseType}</td>
           <td>${x.data().date}</td>
+          <td><button>Edit</button></td>
+          <td><button>Delete</button></td>
           </tr>
     
         `
         console.log(x.data().name)
       });
     })
+
+
+    //get data in feilds
+
