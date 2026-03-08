@@ -59,17 +59,24 @@ const db = getFirestore(app);
           <td>${x.data().amount}</td>
           <td>${x.data().expenseType}</td>
           <td>${x.data().date}</td>
-          <td><button>Edit</button></td>
-          <td><button>Delete</button></td>
+          <td><button onclick="edit()">Edit</button></td>
+          <td><button class="delBtn" data-id="${x.id}">Delete</button></td>
           </tr>
     
         `
-        console.log(x.data().name)
-      });
+      });    
     })
 
 
     //get data in feilds
 
-    getDoc()
+  
+    tableBody.addEventListener("click",function(e){
+      if(e.target.classList.contains("delBtn")){
+      const id =e.target.dataset.id;
+      deleteDoc(doc(db,"expensetracker",id))
+      }
+    })
+  
+    
 
