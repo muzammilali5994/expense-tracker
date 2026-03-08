@@ -71,3 +71,5 @@ const db = getFirestore(app);
 
     //get data in feilds
 
+    getDoc()
+
