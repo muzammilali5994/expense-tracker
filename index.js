@@ -36,10 +36,13 @@ const db = getFirestore(app);
     //fetch data in table
 
     const tableBody = document.getElementById("tableBody");
-
+    let Texpense = document.getElementById("expense");
+    let Tincome  = document.getElementById("income");
   
     onSnapshot(collection(db,"expensetracker"),(sndata)=>{
       tableBody.innerHTML = "";
+      let TotalExpense = "";
+      let TotalIncome = "";
       sndata.forEach((x) => {
         tableBody.innerHTML += `
           <tr>
@@ -52,6 +55,15 @@ const db = getFirestore(app);
           </tr>
     
         `
+        if(x.data().expenseType === "income"){
+          TotalIncome += x.data().amount
+        }
+        else{
+          TotalExpense += x.data().amount
+        }
+
+        Texpense.innerText = TotalExpense;
+        Tincome.innerText = TotalIncome;
       });    
     })
 
