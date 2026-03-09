@@ -22,7 +22,7 @@ const db = getFirestore(app);
 
 // Add Data
 
-   
+   let Editid = null;
 
     const submitBtn = document.getElementById("submitBtn");
 
@@ -31,19 +31,7 @@ const db = getFirestore(app);
     const expenseType = document.getElementById("expense-type");
     const date = document.getElementById("date");
 
-    submitBtn.addEventListener("click",addData)
-   
-        async function addData() {
-            await addDoc(collection(db,"expensetracker"),{
-                name:name.value,
-                amount:amount.value,
-                expenseType:expenseType.value,
-                date:date.value
-            })
-            name.value="";
-            amount.value="";
-            date.value="";
-    }
+    
 
     //fetch data in table
 
@@ -59,7 +47,7 @@ const db = getFirestore(app);
           <td>${x.data().amount}</td>
           <td>${x.data().expenseType}</td>
           <td>${x.data().date}</td>
-          <td><button onclick="edit()">Edit</button></td>
+          <td><button class="editBtn" data-id="${x.id}">Edit</button></td>
           <td><button class="delBtn" data-id="${x.id}">Delete</button></td>
           </tr>
     
@@ -68,7 +56,7 @@ const db = getFirestore(app);
     })
 
 
-    //get data in feilds
+    //Delete data in feilds
 
   
     tableBody.addEventListener("click",function(e){
@@ -78,5 +66,56 @@ const db = getFirestore(app);
       }
     })
   
+
+  //Edit Button Work
+
+  tableBody.addEventListener("click",async function(e){
+      if(e.target.classList.contains("editBtn")){
+      const id =e.target.dataset.id;
+      
+      Editid = id;
+
+      submitBtn.innerText = "Update Expense"; 
+        //get data
+      const datafill =await getDoc(doc(db,"expensetracker",id))
+      name.value = datafill.data().name;
+      amount.value = datafill.data().amount;
+      expenseType.value = datafill.data().expenseType;
+      date.value  = datafill.data().date;
+      }
+    })
     
+    submitBtn.addEventListener("click",async function AddData(){
+      if(Editid){
+
+        
+          await updateDoc(doc(db,"expensetracker",Editid),{
+            name : name.value,
+            amount : amount.value,
+            expenseType : expenseType.value,
+            date : date.value
+          })
+          name.value="";
+          amount.value="";
+          date.value="";
+
+          Editid = null;
+          submitBtn.innerText = "Add Expense";
+      }
+      else{
+          
+            await addDoc(collection(db,"expensetracker"),{
+                name:name.value,
+                amount:amount.value,
+                expenseType:expenseType.value,
+                date:date.value
+            })
+            name.value="";
+            amount.value="";
+            date.value="";
+      
+          }
+          
+        })
+  
 
